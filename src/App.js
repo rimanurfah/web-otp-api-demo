@@ -18,9 +18,10 @@ export default class App extends Component {
           signal: ac.signal,
         })
         .then((otpnya) => {
+          this.setState({ descriptionOTPFunc: "OTP founded" })
           this.setState({ otp: otpnya.code });
-          this.setState({ descriptionOTPFunc: "OTP founded: " })
-          // ac.abort();
+          this.setState({ descriptionOTPFunc: otpnya })
+          ac.abort();
         })
         .catch((err) => {
           ac.abort();
