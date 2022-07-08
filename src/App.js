@@ -9,10 +9,9 @@ export default class App extends Component {
     };
   }
   componentDidMount() {
-    this.setState({ descriptionOTPFunc: "componentDidMount" })
     if ("OTPCredential" in window) {
       const input = document.querySelector(
-        'input[autocomplete="one-time-code"]'
+        'input[autoComplete="one-time-code"]'
       );
       if (!input) {
         this.setState({ descriptionOTPFunc: "!input tag" })
@@ -49,7 +48,7 @@ export default class App extends Component {
           <input
             required
             autoComplete="one-time-code"
-            value={this.state.receivedOtp}
+            // value={this.state.receivedOtp}
             onChange={event => this.setState({ receivedOtp: event.target.value })}
           />
           <input type="submit" />
