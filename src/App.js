@@ -15,7 +15,7 @@ export default class App extends Component {
   }
 
   detectOTP() {
-    console.log("detectOTP function")
+    this.setState({log: "START DETECTING"})
     if ("OTPCredential" in window) {
       console.log("waiting formatted SMS")
       this.setState({ descriptionOTPFunc: "waiting formatted SMS" })
@@ -44,8 +44,7 @@ export default class App extends Component {
           ac.abort();
         }).catch((err) => {
           ac.abort();
-          console.log(err)
-          // this.setState({ log: err })
+          this.setState({ log: "error : " + err.toString() })
           this.setState({ descriptionOTPFunc: "OTP not found. Catch block" })
         });
     } else {
