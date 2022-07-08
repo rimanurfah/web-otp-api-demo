@@ -5,52 +5,30 @@ export default class App extends Component {
     super(props);
     this.state = {
       otp: "",
-      error: "",
       descriptionOTPFunc: ""
     };
   }
   componentDidMount() {
-    this.autofillOTP();
-  }
-
-  async autofillOTP() {
-    this.setState({ descriptionOTPFunc: "mulai autofillOTP function" });
-    if ('OTPCredential' in window) {
+    if ("OTPCredential" in window) {
       const ac = new AbortController();
-      try {
-        if (navigator.credentials) {
-          try {
-            this.setState({ descriptionOTPFunc: "try block 2" });
-            navigator.credentials
-              .get({
-                otp: { transport: ['SMS'] },
-                signal: ac.signal
-              }).then(otp => {
-                if (otp && otp.code) {
-                  this.setState({ otp: otp.code });
-                  this.setState({ descriptionOTPFunc: "navigator.credential -> there is otp" });
-                  ac.abort();
-                }
-              }).catch(error => {
-                this.setState({ descriptionOTPFunc: "catch block navigator.credentials 1" });
-                console.log(error);
-                ac.abort();
-              });
-          } catch (error) {
-            console.log(error);
-            this.setState({ error: "catch block navigator.credentials 2" });
-          }
-        } else {
-          this.setState({ error: "!navigator.credential" });
+
+      navigator.credentials
+        .get({
+          otp: { transport: ["sms"] },
+          signal: ac.signal,
+        })
+        .then((otp) => {
+          this.setState({ otp: otp.code });
+          this.setState({ descriptionOTPFunc: "OTP founded: " })
           ac.abort();
-        }
-      } catch (error) {
-        console.log(error);
-        this.setState({ error: 'OTPCredential' });
-        ac.abort();
-      }
+        })
+        .catch((err) => {
+          ac.abort();
+          console.log(err);
+          this.setState({ descriptionOTPFunc: "OTP not found. Catch block" })
+        });
     } else {
-      this.setState({ error: 'WEBOTP API not supported' });
+      this.setState({ descriptionOTPFunc: "WEB OTP API not supported" })
     }
   }
 
@@ -69,7 +47,7 @@ export default class App extends Component {
         </form>
         <b>Process that are going on in the system:</b>
         <p>{this.state.descriptionOTPFunc}</p>
-        {/* <p>{this.state.error}</p> */}
+        <p>{this.state.otp}</p>
       </section>
     )
   }
