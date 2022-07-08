@@ -15,7 +15,9 @@ export default class App extends Component {
   }
 
   async detectOTP() {
+    console.log("detectOTP function")
     if ("OTPCredential" in window) {
+      console.log("waiting formatted SMS")
       this.setState({ descriptionOTPFunc: "waiting formatted SMS" })
       const ac = new AbortController();
 
@@ -68,7 +70,7 @@ export default class App extends Component {
         <p>{this.state.descriptionOTPFunc}</p>
         <p>ini otpnya: {this.state.receivedOtp}</p>
 
-        <p>log : {this.state.log} </p>
+        <p>logs : {this.state.log} </p>
       </section>
     )
   }
