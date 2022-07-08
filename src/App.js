@@ -21,7 +21,7 @@ export default class App extends Component {
       this.setState({ descriptionOTPFunc: "waiting formatted SMS" })
       const ac = new AbortController();
 
-      navigator.credentials
+      await navigator.credentials
         .get({
           otp: { transport: ["sms"] },
           signal: ac.signal,
