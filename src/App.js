@@ -10,25 +10,32 @@ export default class App extends Component {
   }
   componentDidMount() {
     if ("OTPCredential" in window) {
-      this.setState({ descriptionOTPFunc: "waiting formatted SMS" })
-      const ac = new AbortController();
+      window.addEventListener("DOMContentLoaded", (e) => {
+        this.setState({ descriptionOTPFunc: "waiting formatted SMS" })
+        const input = document.querySelector(
+          'input[autocomplete="one-time-code"]'
+        );
+        if (!input) return;
+        const ac = new AbortController();
 
-      navigator.credentials
-        .get({
-          otp: { transport: ["sms"] },
-          signal: ac.signal,
-        })
-        .then((otp) => {
-          this.setState({ descriptionOTPFunc: "OTP founded" })
-          this.setState({ receivedOtp: otp.code });
-          this.setState({ descriptionOTPFunc: otp })
-          ac.abort();
-        })
-        .catch((err) => {
-          ac.abort();
-          console.log(err);
-          this.setState({ descriptionOTPFunc: "OTP not found. Catch block" })
-        });
+        navigator.credentials
+          .get({
+            otp: { transport: ["sms"] },
+            signal: ac.signal,
+          })
+          .then((otp) => {
+            this.setState({ descriptionOTPFunc: "OTP founded" })
+            // this.setState({ receivedOtp: otp.code });
+            input.value = otp.code
+            this.setState({ descriptionOTPFunc: otp })
+            ac.abort();
+          })
+          .catch((err) => {
+            ac.abort();
+            console.log(err);
+            this.setState({ descriptionOTPFunc: "OTP not found. Catch block" })
+          });
+      });
     } else {
       this.setState({ descriptionOTPFunc: "WEB OTP API not supported" })
     }
