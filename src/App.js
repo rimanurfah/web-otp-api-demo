@@ -9,7 +9,12 @@ export default class App extends Component {
       log: ""
     };
   }
+
   componentDidMount() {
+    this.detectOTP();
+  }
+
+  async detectOTP() {
     if ("OTPCredential" in window) {
       this.setState({ descriptionOTPFunc: "waiting formatted SMS" })
       const ac = new AbortController();
@@ -19,6 +24,7 @@ export default class App extends Component {
           otp: { transport: ["sms"] },
           signal: ac.signal,
         }).then((otp) => {
+          console.log("then block: ", otp);
           this.setState({ descriptionOTPFunc: "then block" })
           this.setState({ log: otp })
           if (otp) {
@@ -36,7 +42,7 @@ export default class App extends Component {
           ac.abort();
         }).catch((err) => {
           ac.abort();
-          console.log(err);
+          console.log(err)
           // this.setState({ log: err })
           this.setState({ descriptionOTPFunc: "OTP not found. Catch block" })
         });
