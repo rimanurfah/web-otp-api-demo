@@ -19,6 +19,7 @@ export default class App extends Component {
           signal: ac.signal,
         })
         .then((otp) => {
+          this.setState({descriptionOTPFunc: "then block"})
           if (otp) {
             this.setState({descriptionOTPFunc: "then block & there is otp"})
             if (otp.code) {
