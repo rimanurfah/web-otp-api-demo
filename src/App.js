@@ -10,12 +10,7 @@ export default class App extends Component {
   }
   componentDidMount() {
     if ("OTPCredential" in window) {
-      const input = document.querySelector(
-        'input[autoComplete="one-time-code"]'
-      );
-      if (!input) {
-        this.setState({ descriptionOTPFunc: "!input tag" })
-      };
+      this.setState({ descriptionOTPFunc: "waiting for formatted SMS" })
       const ac = new AbortController();
 
       navigator.credentials
@@ -24,10 +19,18 @@ export default class App extends Component {
           signal: ac.signal,
         })
         .then((otp) => {
-          this.setState({ descriptionOTPFunc: "OTP founded" })
-          // this.setState({ receivedOtp: otp.code });
-          input.value = otp.code
-          this.setState({ descriptionOTPFunc: otp })
+          if (otp) {
+            this.setState({descriptionOTPFunc: "then block & there is otp"})
+            if (otp.code) {
+              this.setState({ descriptionOTPFunc: "there is otp.code"})
+              this.setState({ receivedOtp: otp.code });
+              this.setState({ descriptionOTPFunc: otp })
+            } else {
+              this.setState({ descriptionOTPFunc: "there isn't otp.code"})
+            }
+          } else {
+            this.setState({descriptionOTPFunc: "then block & there isn't otp"})
+          }
           ac.abort();
         })
         .catch((err) => {
@@ -48,7 +51,7 @@ export default class App extends Component {
           <input
             required
             autoComplete="one-time-code"
-            // value={this.state.receivedOtp}
+            value={this.state.receivedOtp}
             onChange={event => this.setState({ receivedOtp: event.target.value })}
           />
           <input type="submit" />
