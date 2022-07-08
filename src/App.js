@@ -17,24 +17,22 @@ export default class App extends Component {
         .get({
           otp: { transport: ["sms"] },
           signal: ac.signal,
-        })
-        .then((otp) => {
-          this.setState({descriptionOTPFunc: "then block"})
+        }).then((otp) => {
+          this.setState({ descriptionOTPFunc: "then block" })
           if (otp) {
-            this.setState({descriptionOTPFunc: "then block & there is otp"})
+            this.setState({ descriptionOTPFunc: "then block & there is otp" })
             if (otp.code) {
-              this.setState({ descriptionOTPFunc: "there is otp.code"})
+              this.setState({ descriptionOTPFunc: "there is otp.code" })
               this.setState({ receivedOtp: otp.code });
               this.setState({ descriptionOTPFunc: otp })
             } else {
-              this.setState({ descriptionOTPFunc: "there isn't otp.code"})
+              this.setState({ descriptionOTPFunc: "there isn't otp.code" })
             }
           } else {
-            this.setState({descriptionOTPFunc: "then block & there isn't otp"})
+            this.setState({ descriptionOTPFunc: "then block & there isn't otp" })
           }
           ac.abort();
-        })
-        .catch((err) => {
+        }).catch((err) => {
           ac.abort();
           console.log(err);
           this.setState({ descriptionOTPFunc: "OTP not found. Catch block" })
