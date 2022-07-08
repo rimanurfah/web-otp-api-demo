@@ -19,6 +19,7 @@ export default class App extends Component {
         if (!input) return;
         const ac = new AbortController();
 
+<<<<<<< HEAD
         navigator.credentials
           .get({
             otp: { transport: ["sms"] },
@@ -37,6 +38,32 @@ export default class App extends Component {
             this.setState({ descriptionOTPFunc: "OTP not found. Catch block" })
           });
       });
+=======
+      navigator.credentials
+        .get({
+          otp: { transport: ["sms"] },
+          signal: ac.signal,
+        }).then((otp) => {
+          this.setState({ descriptionOTPFunc: "then block" })
+          if (otp) {
+            this.setState({ descriptionOTPFunc: "then block & there is otp" })
+            if (otp.code) {
+              this.setState({ descriptionOTPFunc: "there is otp.code" })
+              this.setState({ receivedOtp: otp.code });
+              this.setState({ descriptionOTPFunc: otp })
+            } else {
+              this.setState({ descriptionOTPFunc: "there isn't otp.code" })
+            }
+          } else {
+            this.setState({ descriptionOTPFunc: "then block & there isn't otp" })
+          }
+          ac.abort();
+        }).catch((err) => {
+          ac.abort();
+          console.log(err);
+          this.setState({ descriptionOTPFunc: "OTP not found. Catch block" })
+        });
+>>>>>>> 9e973ead670f10833b41791902f2d42e64a063cd
     } else {
       this.setState({ descriptionOTPFunc: "WEB OTP API not supported" })
     }
