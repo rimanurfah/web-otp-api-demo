@@ -4,12 +4,13 @@ export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      otp: "",
+      receivedOtp: "",
       descriptionOTPFunc: ""
     };
   }
   componentDidMount() {
     if ("OTPCredential" in window) {
+      this.setState({ descriptionOTPFunc: "waiting formatted SMS" })
       const ac = new AbortController();
 
       navigator.credentials
@@ -17,10 +18,10 @@ export default class App extends Component {
           otp: { transport: ["sms"] },
           signal: ac.signal,
         })
-        .then((otpnya) => {
+        .then((otp) => {
           this.setState({ descriptionOTPFunc: "OTP founded" })
-          this.setState({ otp: otpnya.code });
-          this.setState({ descriptionOTPFunc: otpnya })
+          this.setState({ receivedOtp: otp.code });
+          this.setState({ descriptionOTPFunc: otp })
           ac.abort();
         })
         .catch((err) => {
@@ -41,14 +42,14 @@ export default class App extends Component {
           <input
             required
             autoComplete="one-time-code"
-            value={this.state.otp}
-            onChange={event => this.setState({ otp: event.target.value })}
+            value={this.state.receivedOtp}
+            onChange={event => this.setState({ receivedOtp: event.target.value })}
           />
           <input type="submit" />
         </form>
         <b>Process that are going on in the system:</b>
         <p>{this.state.descriptionOTPFunc}</p>
-        <p>ini otpnya: {this.state.otp}</p>
+        <p>ini otpnya: {this.state.receivedOtp}</p>
       </section>
     )
   }
