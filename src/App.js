@@ -37,7 +37,7 @@ export default class App extends Component {
         }).catch((err) => {
           ac.abort();
           console.log(err);
-          this.setState({ log: err })
+          // this.setState({ log: err })
           this.setState({ descriptionOTPFunc: "OTP not found. Catch block" })
         });
     } else {
