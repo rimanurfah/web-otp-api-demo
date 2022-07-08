@@ -5,39 +5,38 @@ export default class App extends Component {
     super(props);
     this.state = {
       receivedOtp: "",
-      descriptionOTPFunc: ""
+      descriptionOTPFunc: "",
+      log: ""
     };
   }
   componentDidMount() {
     if ("OTPCredential" in window) {
-      this.setState({ descriptionOTPFunc: "waiting for formatted SMS" })
-      const ac = new AbortController();
+      window.addEventListener("DOMContentLoaded", (e) => {
+        this.setState({ descriptionOTPFunc: "waiting formatted SMS" })
+        const input = document.querySelector(
+          'input[autocomplete="one-time-code"]'
+        );
+        if (!input) return;
+        const ac = new AbortController();
 
-      navigator.credentials
-        .get({
-          otp: { transport: ["sms"] },
-          signal: ac.signal,
-        })
-        .then((otp) => {
-          if (otp) {
-            this.setState({descriptionOTPFunc: "then block & there is otp"})
-            if (otp.code) {
-              this.setState({ descriptionOTPFunc: "there is otp.code"})
-              this.setState({ receivedOtp: otp.code });
-              this.setState({ descriptionOTPFunc: otp })
-            } else {
-              this.setState({ descriptionOTPFunc: "there isn't otp.code"})
-            }
-          } else {
-            this.setState({descriptionOTPFunc: "then block & there isn't otp"})
-          }
-          ac.abort();
-        })
-        .catch((err) => {
-          ac.abort();
-          console.log(err);
-          this.setState({ descriptionOTPFunc: "OTP not found. Catch block" })
-        });
+        navigator.credentials
+          .get({
+            otp: { transport: ["sms"] },
+            signal: ac.signal,
+          })
+          .then((otp) => {
+            this.setState({ descriptionOTPFunc: "OTP founded" })
+            this.setState({log: otp})
+            input.value = otp.code
+            this.setState({ descriptionOTPFunc: otp })
+            ac.abort();
+          })
+          .catch((err) => {
+            ac.abort();
+            this.setState({log: err})
+            this.setState({ descriptionOTPFunc: "OTP not found. Catch block" })
+          });
+      });
     } else {
       this.setState({ descriptionOTPFunc: "WEB OTP API not supported" })
     }
@@ -59,6 +58,8 @@ export default class App extends Component {
         <b>Process that are going on in the system:</b>
         <p>{this.state.descriptionOTPFunc}</p>
         <p>ini otpnya: {this.state.receivedOtp}</p>
+
+        <p>log : {this.state.log} </p>
       </section>
     )
   }
