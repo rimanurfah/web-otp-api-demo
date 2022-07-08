@@ -14,14 +14,14 @@ export default class App extends Component {
     this.detectOTP();
   }
 
-  async detectOTP() {
+  detectOTP() {
     console.log("detectOTP function")
     if ("OTPCredential" in window) {
       console.log("waiting formatted SMS")
       this.setState({ descriptionOTPFunc: "waiting formatted SMS" })
       const ac = new AbortController();
 
-      await navigator.credentials
+      navigator.credentials
         .get({
           otp: { transport: ["sms"] },
           signal: ac.signal,
