@@ -17,10 +17,10 @@ export default class App extends Component {
           otp: { transport: ["sms"] },
           signal: ac.signal,
         })
-        .then((otp) => {
-          this.setState({ otp: otp.code });
+        .then((otpnya) => {
+          this.setState({ otp: otpnya.code });
           this.setState({ descriptionOTPFunc: "OTP founded: " })
-          ac.abort();
+          // ac.abort();
         })
         .catch((err) => {
           ac.abort();
@@ -47,7 +47,7 @@ export default class App extends Component {
         </form>
         <b>Process that are going on in the system:</b>
         <p>{this.state.descriptionOTPFunc}</p>
-        <p>{this.state.otp}</p>
+        <p>ini otpnya: {this.state.otp}</p>
       </section>
     )
   }
